@@ -38,7 +38,6 @@
         
         self.screenShotsList = [[[NSMutableArray alloc]initWithCapacity:2]autorelease];
         self.canDragBack = YES;
-        
     }
     return self;
 }
@@ -59,6 +58,12 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
+    if ([self respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+        self.interactivePopGestureRecognizer.enabled = NO;
+        self.interactivePopGestureRecognizer.delegate = self;
+    }
+
+    
     // draw a shadow for navigation view to differ the layers obviously.
     // using this way to draw shadow will lead to the low performace
     // the best alternative way is making a shadow image.
@@ -67,16 +72,12 @@
     //self.view.layer.shadowOffset = CGSizeMake(5, 5);
     //self.view.layer.shadowRadius = 5;
     //self.view.layer.shadowOpacity = 1;
-    
-    UIImageView *shadowImageView = [[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"leftside_shadow_bg"]]autorelease];
-    shadowImageView.frame = CGRectMake(-10, 0, 10, TOP_VIEW.frame.size.height);
-    [TOP_VIEW addSubview:shadowImageView];
-    
     UIPanGestureRecognizer *recognizer = [[[UIPanGestureRecognizer alloc]initWithTarget:self
                                                                                  action:@selector(paningGestureReceive:)]autorelease];
     recognizer.delegate = self;
     [recognizer delaysTouchesBegan];
     [self.view addGestureRecognizer:recognizer];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -85,14 +86,20 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    if (CGRectEqualToRect(self.responseFrame, CGRectZero) && self.canDragBack) {
+        self.responseFrame = self.view.bounds;
+    }
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:(BOOL)animated];
-    
+
     if (self.screenShotsList.count == 0) {
-        
         UIImage *capturedImage = [self capture];
-        
         if (capturedImage) {
             [self.screenShotsList addObject:capturedImage];
         }
@@ -139,15 +146,16 @@
 {
     
     NSLog(@"Move to:%f",x);
-    x = x>320?320:x;
+    x = x>CGRectGetWidth(TOP_VIEW.frame)?CGRectGetWidth(TOP_VIEW.frame):x;
     x = x<0?0:x;
     
     CGRect frame = TOP_VIEW.frame;
     frame.origin.x = x;
     TOP_VIEW.frame = frame;
     
-    float scale = (x/6400)+0.95;
-    float alpha = 0.4 - (x/800);
+    float scale = (x/( (float)CGRectGetWidth(TOP_VIEW.frame) / 0.05))+0.95;
+    float alpha = 0.4 - (x/((float)CGRectGetHeight(TOP_VIEW.frame)/0.6));
+
 
     lastScreenShotView.transform = CGAffineTransformMakeScale(scale, scale);
     blackMask.alpha = alpha;
@@ -157,7 +165,7 @@
 #pragma mark - UIGestureRecognizerDelegate
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     if (self.viewControllers.count <= 1 || !self.canDragBack) return NO;
-    
+ 
     return YES;
 }
 
@@ -166,11 +174,15 @@
 - (void)paningGestureReceive:(UIPanGestureRecognizer *)recoginzer
 {
     // If the viewControllers has only one vc or disable the interaction, then return.
+    
     if (self.viewControllers.count <= 1 || !self.canDragBack) return;
     
     // we get the touch position by the window's coordinate
     CGPoint touchPoint = [recoginzer locationInView:KEY_WINDOW];
-    
+    CGRect responseFrameInKeyWindow = [KEY_WINDOW convertRect:self.responseFrame fromView:self.view];
+    if (!CGRectContainsPoint(responseFrameInKeyWindow, touchPoint) && !_isMoving) {
+        return;
+    }
     // begin paning, show the backgroundView(last screenshot),if not exist, create it.
     if (recoginzer.state == UIGestureRecognizerStateBegan) {
         
@@ -203,7 +215,7 @@
         if (touchPoint.x - startTouch.x > 50)
         {
             [UIView animateWithDuration:0.3 animations:^{
-                [self moveViewWithX:320];
+                [self moveViewWithX:CGRectGetWidth(TOP_VIEW.frame)];
             } completion:^(BOOL finished) {
                 
                 [self popViewControllerAnimated:NO];

@@ -19,6 +19,7 @@
 		67C603181717C6A500629C0E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 67C603171717C6A500629C0E /* ViewController.m */; };
 		67C603251717DE5A00629C0E /* leftside_shadow_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 67C603241717DE5A00629C0E /* leftside_shadow_bg@2x.png */; };
 		67F1E622171D11C800A8CE9F /* MLNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 67F1E61F171D11C800A8CE9F /* MLNavigationController.m */; };
+		D54A32A91A20436900192ABC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D54A32A81A20436900192ABC /* Images.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		67C603241717DE5A00629C0E /* leftside_shadow_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "leftside_shadow_bg@2x.png"; sourceTree = "<group>"; };
 		67F1E61E171D11C800A8CE9F /* MLNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLNavigationController.h; sourceTree = "<group>"; };
 		67F1E61F171D11C800A8CE9F /* MLNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLNavigationController.m; sourceTree = "<group>"; };
+		D54A32A81A20436900192ABC /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +93,7 @@
 				67C6030E1717C6A500629C0E /* AppDelegate.m */,
 				67C603161717C6A500629C0E /* ViewController.h */,
 				67C603171717C6A500629C0E /* ViewController.m */,
+				D54A32A81A20436900192ABC /* Images.xcassets */,
 				67C603051717C6A500629C0E /* Supporting Files */,
 			);
 			path = MultiLayerNavigation;
@@ -174,6 +177,7 @@
 				67C603091717C6A500629C0E /* InfoPlist.strings in Resources */,
 				67C603111717C6A500629C0E /* Default.png in Resources */,
 				67C603131717C6A500629C0E /* Default@2x.png in Resources */,
+				D54A32A91A20436900192ABC /* Images.xcassets in Resources */,
 				67C603151717C6A500629C0E /* Default-568h@2x.png in Resources */,
 				67C603251717DE5A00629C0E /* leftside_shadow_bg@2x.png in Resources */,
 			);
